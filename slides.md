@@ -5,9 +5,9 @@ theme: seriph
 # like them? see https://unsplash.com/collections/94734566/slidev
 background: https://cover.sli.dev
 # some information about your slides (markdown enabled)
-title: Welcome to Slidev
+title: Modern Javascript
 info: |
-  ## Slidev Starter Template
+  ## JS 語法進化史及改變
   Presentation slides for developers.
 
   Learn more at [Sli.dev](https://sli.dev)
@@ -25,7 +25,8 @@ mdc: true
 #  ogImage: https://cover.sli.dev
 ---
 
-# Welcome to Slidev
+# 🚀 Modern JavaScript
+### JS 的演變以及核心理念
 
 Presentation slides for developers
 
@@ -50,21 +51,19 @@ The last comment block of each slide will be treated as slide notes. It will be 
 transition: fade-out
 ---
 
-# What is Slidev?
+# 🧟‍♂️ 舊 JS 還能跑，那為什麼要改？
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
+- 📝 **`var` 沒有限定範圍，全域污染常發生** 
+- 🎨 **callback 套 callback，讀不懂也改不動**
+- 🧑‍💻 **函數放一堆，根本找不到是哪裡定義** 
+- 🤹 **明明是非同步卻不曉得哪時會執行** 
+- ...
 
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
+### 👉 現代寫法不是「潮」，是 清晰、安全、好維護 的基本功
+
 <br>
 <br>
 
-Read more about [Why Slidev?](https://sli.dev/guide/why)
 
 <!--
 You can have `style` tag in markdown to override the style for the current page.
@@ -89,12 +88,9 @@ Here is another comment.
 
 ---
 transition: slide-up
-level: 2
 ---
 
-# Navigation
-
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
+# 🧯 用 const 滅火，別讓 var 搞事
 
 ## Keyboard Shortcuts
 
