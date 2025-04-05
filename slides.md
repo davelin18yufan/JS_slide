@@ -405,6 +405,7 @@ console.log(add(2, 3)) // 5
 ```
 ````
 
+
 ```js {monaco-run}
 const person = {
   name: "Darren",
@@ -421,18 +422,40 @@ person.sayHiArrow();
 
 ```
 
-<div v-click="2" v-motion
+<div v-click="3" v-motion
   :initial="{ y: 40, opacity: 0 }"
   :enter="{ y: 0, opacity: 1 }"
   :leave="{ y: -200, opacity: 0, transition: { duration: 300 } }">
 
-<ul class="text-white">
-      <li>不會創建自己的 `this`，讓你更容易管理作用域</li>
+<ul class="text-amber-500">
+      <li>不會創建自己的 <code>this</code>，讓你更容易管理作用域</li>
       <li>語法簡潔，提升可讀性</li>
       <li>適合用於簡單邏輯或 callback 函式</li>
     </ul>
 
 </div>
+
+--- 
+transition: fade-out
+---
+
+# 📦 Spread vs Rest：一體兩面
+
+Spread 展開
+
+const arr = [1, 2];
+const more = [...arr, 3];
+
+Rest 收集
+
+function sum(...nums) {
+  return nums.reduce((a, b) => a + b);
+}
+sum(1, 2, 3); // 6
+
+✅ 同樣語法，依場景扮演不同角色
+
+
 
 ---
 layout: center
