@@ -1,0 +1,24 @@
+h1,
+h2 {
+  background-color: rgb(33, 131, 46);
+  background-clip: text;
+  background-image: linear-gradient(
+    45deg,
+    rgb(176, 73, 197) 15%,
+    rgb(128, 10, 138) 20%
+  );
+  background-size: 100%;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+h3,
+h4,
+h5 {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+code {
+  color: rgb(255, 203, 15);
+}
