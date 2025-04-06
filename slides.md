@@ -319,9 +319,9 @@ const apiKey = "123456"
         <td class="px-4 py-2 text-green-400">提升（Hoisting）</td>
         <td class="px-4 py-2">
         <pre class="p-0 m-0">
-<code>var</code> 宣告的變數會自動初始化為 <code>undefined</code>，因此在宣告前就使用變數，<span v-mark.circle.orange="6">不會出現錯誤</span>， 
-而是 <code>undefined</code>；但是 <code>let</code> 與 <code>const</code> 則不會自動初始化，進入暫時死區 (TDZ)， 
-因此在宣告前使用<span v-mark.circle.orange="6">會出現錯誤</span>。
+          <code>var</code> 宣告的變數會自動初始化為 <code>undefined</code>，因此在宣告前就使用變數，<span v-mark.circle.orange="6">不會出現錯誤</span>， 
+          而是 <code>undefined</code>；但是 <code>let</code> 與 <code>const</code> 則不會自動初始化，進入暫時死區 (TDZ)， 
+          因此在宣告前使用<span v-mark.circle.orange="6">會出現錯誤</span>。
         </pre>
         </td>
         </tr>
@@ -566,9 +566,16 @@ logAll("hello", true, 42);
 // 42
 ```
 ```ts
-// 解構蒐集剩下的元素，並且賦值給變數 rest
-const { password, ...userInfo } = userData;
+// 解構蒐集剩下的元素，並且賦值給變數 userInfo
+const {password, ...userInfo} = userData
 // 只留下非敏感資訊
+```
+```ts
+const { ErrorMessage, ...userInfo } = await $.ajax({
+  method: "GET",
+  url: "..api/tima-api_getOne",
+  async: true
+});
 
 ```
 ````
@@ -696,7 +703,7 @@ image: https://images.unsplash.com/photo-1446776877081-d282a0f896e2?q=80&w=2072&
 
 # 🔁 事件循環（Event Loop）
 
-<a href="https://medium.com/@davelin18yufan/js%E5%AD%B8%E7%BF%92%E7%AD%86%E8%A8%98-what-is-event-loop-8cdf0383207f">筆記</a>
+<a target="_blank" href="https://medium.com/@davelin18yufan/js%E5%AD%B8%E7%BF%92%E7%AD%86%E8%A8%98-what-is-event-loop-8cdf0383207f">筆記</a>
 
 <div v-click="[1]">
 
@@ -860,8 +867,18 @@ transition: fade
 ---
 # 🎉 如何創建 Promise
 
+<div v-click.hide="1" class="absolute bottom-10">
+  <p class="text-yellow-400">一個 Promise 一定會處於以下三種狀態的其中一種</p>
+  <ul>
+    <li class="text-green-500">pending：初始狀態，執行了 executor，但還在等待中。</li>
+    <li class="text-teal-500">fulfilled：表示操作完成，執行 resolve 函式。</li>
+    <li class="text-emerald-500">rejected：表示操作失敗，執行 reject 函式。</li>
+  </ul>
+</div>
+
 ````md magic-move
 ```ts
+// Promise 是個構件函式
 new Promise((resolve, reject) => {
   console.log("executor 立即執行"); // executor 立即執行
 });
@@ -872,9 +889,9 @@ function requestData(url) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (url === "tima.com") {
-        resolve("hello welcome to tima");
+        resolve("hello welcome to tima"); // 正確的時候會調用 resolve 函式
       } else {
-        reject("it is not tima");
+        reject("這不是 tima"); // 失敗的時候會調用 reject 函式
       }
     }, 3000);
   });
@@ -886,13 +903,21 @@ requestData("tima.com").then((res) => {
 });
 
 // 2. 請求失敗
-requestData("tima.com").catch((e) => console.log(e)); //it is not tima
-
-// 3. 最後可以加 finally
+requestData("tima.com").catch((e) => console.log(e)); // 這不是 tima
+```
+```ts
+// 3. Promise 可以用一種鏈式 (chaining) 的方式將這些異步操作串連，並且最後可以加 finally
 requestData("tima.com")
-  .then(data => console.log("success", data))
+   .then((res) => {
+    console.log(res); // hello welcome to tima
+    return 1;
+  })
+  .then((res) => {
+    console.log(res); // 1
+    return 2; 
+  })
   .catch(e => console.log("error", e))
-  .finally(() => alert("Yes!"))
+  .finally(() => alert("I will be back!"))
 ```
 ````
 
@@ -904,44 +929,168 @@ transition: fade-out
 
 ````md magic-move
 ```ts
-const msg = $("#msg")
+const msg = $("#msg");
 
-ajax('url1')
-  .then(res1 => ajax('url2'))
-  .then(res2 => ajax('url3'))
-  .then(res3 => {
-    // ✅ 處理結果
-    msg.text(res3.title)
+const res = orderLunch("beef rice")
+  .then((response) => {
+    console.log(response); // 🍱「牛肉飯已送達」
+    return checkDrink();
   })
-  .catch(err => console.error(err));
+  .then((drink) => {
+    console.log(`加點飲料：${drink}`); // 🧃「加點飲料：紅茶」
+    return eatLunch();
+  })
+  .then((result) => {
+    console.log(result); // 😋「吃飽了，好滿足」
+    return "今天也工作愉快～";
+  })
+  .catch((e) => console.error("❌ 訂餐過程出錯", e))
+  .finally(() => alert("📦 訂餐流程結束"));
 
-// 確定結果都拿到之後再繼續往下進行
+// ❗ 這時候 msg 還沒更新！因為非同步
+msg.text(res); // <p id="msg">[object Promise]</p>
 ...
 
 ```
 
 ```ts
-async function getData() {
+// 要使用 await 外面一定要有 async 包裝
+async function lunchFlow() {
   try {
-    const res1 = await ajax('url1');
-    const res2 = await ajax('url2');
-    const res3 = await ajax('url3');
-  } catch (err) {
-    console.error(err);
+    const meal = await orderLunch("beef rice");
+    console.log(meal); // 🍱「牛肉飯已送達」
+
+    const drink = await checkDrink();
+    console.log(`加點飲料：${drink}`); // 🧃「加點飲料：紅茶」
+
+    const finish = await eatLunch();
+    console.log(finish); // 😋「吃飽了，好滿足」
+
+    msg.text("今天也工作愉快～"); // ✅ 正確更新 <p id="msg">今天也工作愉快～</p>
+  } catch (e) {
+    console.error("❌ 訂餐過程出錯", e);
+  } finally {
+    alert("📦 訂餐流程結束");
   }
 }
+
+lunchFlow();
 ```
 ````
 
-📖 更像同步邏輯，更好讀懂與維護
+<p v-click="2" class="text-yellow-400">📖 更像同步邏輯，更好讀懂與維護</p>
+
+
+---
+transition: fade
+layout: two-cols
+---
+
+## 😵 AJAX 的問題
+
+- 🌐 過於依賴 `jQuery`，現代專案多已棄用  
+- ❌ callback 為主，易形成 callback hell  
+- 😑 錯誤處理不統一  
+- 🤷‍♂️ 不支援 `Promise` / `async-await`  
+- 📦 設定雜亂（如 headers、timeout）
+
+```ts
+$.ajax({
+  url: "/api/data",
+  method: "GET",
+  success: function (res) {
+    console.log("成功", res);
+  },
+  error: function (err) {
+    console.error("錯誤", err);
+  },
+  async: true // 預設是 false, 強制使用 callback
+});
+```
+
+::right::
+
+<div  v-click
+  v-motion   
+  :initial="{ opacity: 0 }"
+  :enter="{ opacity: 1, transition: {duration: 300}}" >
+
+## ✨ Axios 的優勢
+
+- ✅ 支援 Promise / async-await  
+- 🔥 更簡潔語法與統一錯誤處理  
+- 🌈 自動轉換 JSON 格式  
+- <span v-mark.circle.red="3">🛡 支援攔截器（Interceptors）</span>
+- ⏱ 設定更清晰（timeout、headers）
+
+```ts
+// 使用 Promise 語法
+axios.get("/api/data")
+  .then(res => console.log("成功", res.data))
+  .catch(err => console.error("錯誤", err));
+```
+
+</div>
+
+<div 
+  v-click
+  v-motion   
+  :initial="{ opacity: 0 }"
+  :enter="{ opacity: 1, transition: {duration: 300}}"
+>
+
+## 搭配 async / await 更順暢
+
+```ts
+try {
+  const res = await axios.get("/api/data");
+  console.log("成功", res.data);
+} catch (err) {
+  console.error("錯誤", err);
+}
+```
+
+</div>
+
+---
+layout: image
+class: place-content-center brightness-90
+image: https://images.unsplash.com/photo-1542961996-3f032eec02cb?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+---
+
+# 🧠 Wrap-up：採用這些寫法，讓你更現代、更乾淨！
+總結
+
+1. **棄用 `var`**  
+  🔁 改用 `let` / `const`，避免提升與作用域混淆  
+
+2. **活用解構賦值 & 展開/收集運算子**  
+  💡 讓資料的存取與合併更直觀、可讀性更高  
+
+3. **使用樣板字串（template literals）**  
+  📦 避免 `+` 串接地獄，更易維護與嵌入變數、邏輯  
+
+4. **非同步請求請用 Promise / async-await**  
+  🧼 拒絕 callback hell，錯誤處理更一致  
+
+5. **使用原生 JS 方法處理陣列/物件**  
+  🧪 如：`.map()`、`.filter()`、`.reduce()`、`Object.entries()`...
+
+
+<p class="mt-4 text-xl font-bold text-green-400">
+🌟 小習慣，大改變 —— 讓每一行 JavaScript 更簡潔、更穩定！
+</p>
+
 
 ---
 layout: center
 class: text-center
 ---
 
-# Learn More
+# 謝謝聆聽
 
-[Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
+> [Promise 是什麼？有什麼用途？](https://www.explainthis.io/zh-hant/swe/what-is-promise) · [【筆記】到底 Event Loop 關我啥事？](https://medium.com/infinitegamer/why-event-loop-exist-e8ac9d287044)
+
+[GitHub](https://github.com/davelin18yufan/JS_slide) · [Showcases](https://sli.dev/resources/showcases)
 
 <PoweredBySlidev mt-10 />
