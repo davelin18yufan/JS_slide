@@ -68,7 +68,7 @@ layout: center
 
 <v-click>
 <h3 class="text=center w-full mt-4">
-👉 現代寫法不是「潮」，是 清晰、安全、好維護 的基本功
+👉 現代寫法不是「潮」，必須了解演進是為了解決某些問題
 </h3>
 </v-click>
 
@@ -90,7 +90,7 @@ transition: slide-up
 
 # 🧯 用 const 滅火，別讓 var 搞事
 
-- `var` 有 hoisting 且 <span v-mark.red="0">function scope</span>，容易誤用
+- `var` 有 hoisting 且 <span v-mark.red="0">function scope</span>，也可以重複宣告，容易誤用
 
 - `let`、`const` 為 <span v-mark.red="0">block scope</span>，更合理
 
@@ -348,6 +348,9 @@ for (var i = 0; i < 3; i++) {
     // console.log(i);
   }, 1000)
 }
+
+// setTimeout 可視為是模擬送出 API 請求
+// 解法有兩種
 ```
 
 ---
@@ -417,12 +420,12 @@ const person = {
   }
 };
 
-person.sayHi();       
-person.sayHiArrow();  
+// person.sayHi();       
+// person.sayHiArrow();  
 
 ```
 
-<div v-click="3" v-motion
+<div v-click="2" v-motion
   :initial="{ y: 40, opacity: 0 }"
   :enter="{ y: 0, opacity: 1 }"
   :leave="{ y: -200, opacity: 0, transition: { duration: 300 } }">
@@ -435,25 +438,242 @@ person.sayHiArrow();
 
 </div>
 
+---
+transition: slide-up
+---
+
+# 🧩 解構賦值 Destructuring
+
+拆解陣列與物件更快速、更清楚
+
+````md magic-move {lines:true}
+```ts
+// 陣列解構
+const [first, second] = [10, 20];
+console.log(first); // 10
+
+// 物件解構
+const user = { name: 'Ada', age: 25 };
+const { name, age } = user;
+console.log(name); // Ada
+```
+
+```ts
+// 解構參數
+function show({ title, count = 2 }: {title: string; count: number}) {
+  console.log(title, count);
+}
+
+const data1 = {title: "我是標題"}
+const data2 = {title: "我是標題", count: 5}
+show(data1) // 我是標題, 2
+show(data2) // 我是標題, 5
+```
+
+```ts
+const { ItemList: courseList, ErrorMessage: getCoursesError } = await $.ajax({
+  method: "GET",
+  url: "../api/My_tima_api",
+  data: JSON.stringify({ crsNo: "123" }),
+  async: true
+})
+
+if(getCoursesError) {
+  alert(getCoursesError)
+}
+
+console.log(courseList) // api response
+```
+````
+
 --- 
 transition: fade-out
+layout: two-cols-header
+class: gap-1
 ---
 
 # 📦 Spread vs Rest：一體兩面
 
-Spread 展開
+**`...` 可以用來當作兩種語法，依上下文扮演不同角色！**
+<div class="grid grid-cols-2 gap-4 mt-4">
 
+<Card class="bg-gray-800 text-left p-4 rounded-2xl shadow-lg text-sm leading-relaxed">
+
+#### 🌊 Spread 展開
+將陣列、物件中的元素「展開」成個別項目
+  <div class="text-base font-bold mb-2 text-white">🧪 場景 1：複製與合併（Spread）</div>
+  <p class="text-slate-200 mb-2">避免資料被意外改動（Immutable）</p>
+</Card>
+
+<Card class="bg-gray-800 text-left p-4 rounded-2xl shadow-lg text-sm leading-relaxed">
+
+#### 🪣 Rest 收集
+將多個參數「收集」成一個陣列 
+  <div class="text-base font-bold mb-2 text-white">🎯 場景 2：參數收集（Rest）</div>
+  <p class="text-slate-200 mb-2">接收不定數量參數或過濾欄位</p>
+</Card>
+
+</div>
+
+
+::left::
+
+
+````md magic-move {lines:true}
+```ts
+// 展開陣列裡面的元素放入
 const arr = [1, 2];
 const more = [...arr, 3];
+console.log(more); // [1, 2, 3]
+```
+```ts
+const arr1 = [1, 2]
+const arr2 = [3, 4]
 
-Rest 收集
+const combinedArr = [...arr1, ...arr2]
+console.log(combinedArr) // [1, 2, 3, 4]
+```
+```ts
+// 展開物件裡面的屬性放入
+const obj = { a: 1 };
+const clone = { ...obj, b: 2 };
+console.log(clone); // { a: 1, b: 2 }
 
-function sum(...nums) {
-  return nums.reduce((a, b) => a + b);
+```
+
+```ts
+const original = [1, 2, 3];
+const clone = [...original]; // 淺拷貝
+clone.push(4);
+
+console.log(original); // [1, 2, 3]
+console.log(clone);    // [1, 2, 3, 4]
+```
+````
+
+::right::
+
+
+````md magic-move {lines:true}
+```ts
+function logAll(...args) {
+  args.forEach(arg => console.log(arg));
 }
-sum(1, 2, 3); // 6
 
-✅ 同樣語法，依場景扮演不同角色
+logAll("hello", true, 42);
+// hello
+// true
+// 42
+```
+```ts
+// 解構蒐集剩下的元素，並且賦值給變數 rest
+const { password, ...userInfo } = userData;
+// 只留下非敏感資訊
+
+```
+````
+
+---
+transition: slide-left
+---
+
+# 🧪 == 是陷阱，=== 才是真愛
+
+> JavaScript 的彈性是雙面刃，弱比對雖方便，但也埋下許多 **隱性錯誤**。
+
+
+````md magic-move {lines:true}
+
+```ts {1-4|1-4,5|1-4,6|1-4,7|1-4,8|1-4,9|*}
+❌ 弱比對的隱藏陷阱
+
+`==` 會 「自動轉型」, 直覺錯了，還不報錯！
+
+0 == ''         // true ❌
+false == []     // true ❌
+null == undefined // true ❌
+'5' == 5        // true ❌
+NaN == NaN      // false ❌
+
+```
+
+```ts {1-4,6|1-4,7|1-4,8|*}
+✅ 使用 `===` or `Object.is` 更安全
+
+- `===` 比較「值」也比較「型別」
+- `Object.is` 處理 NaN / -0 等特殊情況
+
+0 === ''        // false ✅
+false === []    // false ✅
+Object.is(NaN, NaN)  // true ✅
+```
+
+````
+
+<div class="px-2 rounded-2xl border border-slate-600 bg-emerald-900 shadow-md text-sm "
+    v-click="11"
+    v-motion
+    :initial="{ y: 20, opacity: 0 }"
+    :enter="{ y: 0, opacity: 1 }">
+
+<h3>🧠 小總結</h3>
+
+<ul>
+  <li><code>==</code>：太聰明，容易出事</li>
+  <li><code>===</code>：更嚴謹，更安全</li>
+  <li><code>Object.is()</code>：處理一些極端邊界情況</li>
+</ul>
+
+<p>✅ 預設使用 <code>===</code>，除非你<span v-mark.red="11">非常清楚</span>你要的行為！</p>
+
+</div>
+
+---
+layout: image
+class: place-content-center text-center brightness-80 sepia-10
+image: https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+---
+
+# 🧠 JavaScript 非同步與 Promise 演進之路
+
+> 從 `callback` 到 `async/await`，揭開 JS 非同步處理的進化史
+
+<style>
+h1{
+  background-image: linear-gradient(
+    45deg,
+    rgb(241, 185, 89) 15%,
+    rgb(243, 125, 15) 20%
+  );
+  background-blend-mode: lighten;
+}
+</style>
+
+---
+transition: fade
+---
+
+# 🚦 同步 vs 非同步
+> Javascript 是個單線呈語言
+
+
+### 同步：一步一腳印
+
+```ts
+console.log('A');
+console.log('B');
+console.log('C');
+```
+⏱️ 全部照順序執行，會卡住等待
+
+
+### 非同步：不等你！
+```ts
+console.log('A');
+setTimeout(() => console.log('B'), 1000);
+console.log('C');
+```
+📍 執行順序：A → C → B
 
 
 
