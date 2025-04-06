@@ -233,18 +233,18 @@ transition: fade-in
 
   <!-- Closure 與 Counter 的範例 -->
 
-```ts {monaco-run}
+```ts {monaco-run}{autorun:false}
 function makeCounter() {
   let count = 0
   return () => ++count
 }
 
 const counter = makeCounter()
-// console.log(counter());
-// console.log(counter());
+console.log(counter());
+console.log(counter());
 ```
 
-```ts {monaco-run}{at:'+1'}
+```ts {monaco-run} {autorun:false}
 function makeGreeter(name: string) {
   const greeting = "Hello"
   return function () {
@@ -252,11 +252,11 @@ function makeGreeter(name: string) {
   }
 }
 
-const greetAmy = makeGreeter("Amy")
-// greetAmy();
+const greetTakai = makeGreeter("Takai")
+greetTakai();
 ```
 
-  <p v-click="2">
+  <p v-click="2" class="text-emerald-400">
     ✅ 函式在外層已經執行完畢，但變數還「活著」！
   </p>
 </div>
@@ -342,10 +342,10 @@ const apiKey = "123456"
 
 <h5 class="!text-amber-500 mb-2">經典基礎 JS 考題，結合 Closure、Scope、Hoisting、非同步</h5>
 
-```ts {monaco-run}
+```ts {monaco-run}{autorun:false}
 for (var i = 0; i < 3; i++) {
   setTimeout(function () {
-    // console.log(i);
+    console.log(i);
   }, 1000)
 }
 
@@ -409,7 +409,7 @@ console.log(add(2, 3)) // 5
 ````
 
 
-```js {monaco-run}
+```js {monaco-run}{autorun:false}
 const person = {
   name: "Darren",
   sayHi: function () {
@@ -420,8 +420,8 @@ const person = {
   }
 };
 
-// person.sayHi();       
-// person.sayHiArrow();  
+person.sayHi();       
+person.sayHiArrow();  
 
 ```
 
@@ -654,7 +654,7 @@ transition: fade
 ---
 
 # 🚦 同步 vs 非同步
-> Javascript 是個單線呈語言
+> Javascript 是個單線呈語言 (single thread), 必須 **由上到下** 依序執行
 
 
 ### 同步：一步一腳印
@@ -663,19 +663,277 @@ transition: fade
 console.log('A');
 console.log('B');
 console.log('C');
+// ⏱️ 全部照順序執行，會卡住等待
 ```
-⏱️ 全部照順序執行，會卡住等待
 
 
-### 非同步：不等你！
+<div  
+  v-motion
+  v-click="1"
+  :initial="{ x: 50, opacity: 0 }"
+  :enter="{ x: 0, opacity: 1 }" >
+
+<h3 class="text-yellow-400">非同步：不等你！</h3>
+
 ```ts
 console.log('A');
 setTimeout(() => console.log('B'), 1000);
 console.log('C');
 ```
-📍 執行順序：A → C → B
+</div>
+
+<p v-motion
+  v-click="2"
+  :initial="{ x: 50, opacity: 0 }"
+  :enter="{ x: 0, opacity: 1 }">📍 執行順序：A → C → B 
+</p>
+
+---
+transition: fade-out
+layout: image
+image: https://images.unsplash.com/photo-1446776877081-d282a0f896e2?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+---
+
+# 🔁 事件循環（Event Loop）
+
+<a href="https://medium.com/@davelin18yufan/js%E5%AD%B8%E7%BF%92%E7%AD%86%E8%A8%98-what-is-event-loop-8cdf0383207f">筆記</a>
+
+<div v-click="[1]">
+
+```ts {monaco-run}{autorun:false}
+console.log('hi')
+
+setTimeout(function () {
+  console.log('there')
+}, 0)
+
+console.log('Dave')
+```
+
+</div>
 
 
+<div v-motion
+  v-click="[2]"
+  :initial="{ x: 50, y:50, opacity: 0 }"
+  :enter="{ x: 0, y:10, opacity: 1 }"
+  style="width: 560px" class="absolute top-16 left-1/4">
+<img 
+  src="https://miro.medium.com/v2/resize:fit:1100/format:webp/1*qEKs8aZ3AlJdtVyxvleFqw.png"
+  alt="event loop image"
+/>
+</div>
+
+
+<div v-motion
+  v-click="3"
+  :initial="{ x: 50, y:50, opacity: 0 }"
+  :enter="{ x: 0, y:10, opacity: 1 }"
+  class="absolute top-16 left-1/8">
+  <Youtube 
+    id="N0Au8yc5IOw" width="800" height="400">
+  </Youtube>
+</div>
+
+---
+transition: fade
+---
+
+# 😱 Callback Hell 是什麼？
+
+
+````md magic-move
+```ts
+// 在 ES6 promise 出現之前，JS 通常使用回調函式 (callback) 實現異步操作。
+// 為了確定第二個 API 是在第一個 API 回來之後才進行
+$.ajax({
+  url: 'url1',
+  success: function (res1) {
+    console.log("Response of url1", res1);
+  },
+  error: function (err1) {
+    console.error('Error in url1:', err1);
+  }
+});
+```
+
+```ts
+$.ajax({
+  url: 'url1',
+  success: function (res1) {
+    $.ajax({
+      url: 'url2',
+      success: function (res2) {
+        console.log("Response of url2", url2);
+      },
+      error: function (err2) {
+        console.error('Error in url2:', err2);
+      }
+    });
+  },
+  error: function (err1) {
+    console.error('Error in url1:', err1);
+  }
+});
+```
+
+
+```ts
+$.ajax({
+  url: 'url1',
+  success: function (res1) {
+    $.ajax({
+      url: 'url2',
+      success: function (res2) {
+        $.ajax({
+          url: 'url3',
+          success: function (res3) {
+            //... 🤯
+          },
+          error: function (err3) {
+            console.error('Error in url3:', err3);
+          }
+        });
+      },
+      error: function (err2) {
+        console.error('Error in url2:', err2);
+      }
+    });
+  },
+  error: function (err1) {
+    console.error('Error in url1:', err1);
+  }
+});
+```
+````
+
+---
+transition: slide-left
+layout: center
+---
+
+<img 
+  src="https://i.imgur.com/uX4tMsl.png"
+  alt="callback hell"
+/>
+
+---
+transition: slide-up
+---
+
+# 🎉 Promise 解救地獄
+`Promise` 是在 ES6 出現的新功能，並且是用來優化過去回調函式 `callback` 的寫法
+
+````md magic-move
+```ts
+ajax('url1')
+  .then(res1 => ajax('url2'))
+  .then(res2 => ajax('url3'))
+  .then(res3 => {
+    // ✅ 處理結果
+  })
+  .catch(err => console.error(err));
+```
+
+```ts
+const msg = $("#msg")
+
+ajax('url1')
+  .then(res1 => ajax('url2'))
+  .then(res2 => ajax('url3'))
+  .then(res3 => {
+    // ✅ 處理結果
+    msg.text(res3.title)
+  })
+  .catch(err => console.error(err));
+
+// 確定結果都拿到之後再繼續往下進行
+...
+
+```
+````
+
+🧩 邏輯扁平化、可以統一處理錯誤
+
+---
+transition: fade
+---
+# 🎉 如何創建 Promise
+
+````md magic-move
+```ts
+new Promise((resolve, reject) => {
+  console.log("executor 立即執行"); // executor 立即執行
+});
+```
+
+```ts
+function requestData(url) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (url === "tima.com") {
+        resolve("hello welcome to tima");
+      } else {
+        reject("it is not tima");
+      }
+    }, 3000);
+  });
+}
+
+// 1. 請求成功
+requestData("tima.com").then((res) => {
+  console.log(res); // hello welcome to tima
+});
+
+// 2. 請求失敗
+requestData("tima.com").catch((e) => console.log(e)); //it is not tima
+
+// 3. 最後可以加 finally
+requestData("tima.com")
+  .then(data => console.log("success", data))
+  .catch(e => console.log("error", e))
+  .finally(() => alert("Yes!"))
+```
+````
+
+---
+transition: fade-out
+---
+
+# 🌟 async / await：同步風格的非同步
+
+````md magic-move
+```ts
+const msg = $("#msg")
+
+ajax('url1')
+  .then(res1 => ajax('url2'))
+  .then(res2 => ajax('url3'))
+  .then(res3 => {
+    // ✅ 處理結果
+    msg.text(res3.title)
+  })
+  .catch(err => console.error(err));
+
+// 確定結果都拿到之後再繼續往下進行
+...
+
+```
+
+```ts
+async function getData() {
+  try {
+    const res1 = await ajax('url1');
+    const res2 = await ajax('url2');
+    const res3 = await ajax('url3');
+  } catch (err) {
+    console.error(err);
+  }
+}
+```
+````
+
+📖 更像同步邏輯，更好讀懂與維護
 
 ---
 layout: center
