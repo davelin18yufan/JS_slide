@@ -90,9 +90,9 @@ transition: slide-up
 
 # 🧯 用 const 滅火，別讓 var 搞事
 
-- `var` 有 hoisting 且 <span v-mark.red="0">function scope</span>，也可以重複宣告，容易誤用
+- `var` 有 hoisting 且 <span v-mark.red="3">function scope</span>，也<span v-mark.red="3">可以重複宣告</span>，容易誤用
 
-- `let`、`const` 為 <span v-mark.red="0">block scope</span>，更合理
+- `let`、`const` 為 <span v-mark.red="3">block scope</span>，不能重複宣告
 
 - `const` 限制 reassignment(重新賦值)，提升可預測性
 
@@ -135,7 +135,7 @@ if (true) {
 var memNo = sessionStorage.getItem("memno")
 var Group_Course = {
   BindData: function () {
-    var memNo = $("#student-container").value()
+    var memNo = $("#student-container").val()
     // 使用的 ID 造成混淆及錯誤
   },
   // ...
@@ -189,8 +189,8 @@ v-motion
 // 用 var 宣告在 block 裡
 var count = 1
 if (true) {
-  var count = 2 // 但是因為 var 是函式作用域會被提升到最上面
-  console.log(count) // 2
+  var count = 2 // 但是因為 var 會被提升，往上尋找上一層的函示作用域直到全域
+  console.log(count) 
 }
 console.log(count)
 ```
@@ -200,17 +200,29 @@ console.log(count)
 var count = 1
 if (true) {
   var count = 2 // 🆙
-  console.log(count)
+  console.log(count) // 2
 }
 console.log(count)
 ```
 
 ```ts {*}
-// 用 const/let 避免覆蓋與污染
+// const/let 一樣會提升，但因為是區塊作用域只會提升到 block 的頂端
+// BUT 因為他們不會在宣告前被初始化，此情形又被稱為「暫時死區」 (TDZ)
+
+console.log(greeting); // ❌ Uncaught ReferenceError: greeting is not defined
+let greeting = "hi there";
+```
+
+```ts {*}
+// 用 const/let 避免覆蓋與預期外行為
 const count = 1
 if (true) {
   const count = 2 // ❌ Uncaught SyntaxError: Identifier 'count' has already been declared
+  count++ // ❌ Uncaught TypeError: Assignment to constant variable.
 }
+
+let greeting = "hi there"
+greeting + "we are tima!" // "hi there we are tima!"
 ```
 ````
 
@@ -218,49 +230,6 @@ if (true) {
 
 ---
 transition: fade-in
----
-
-# Brain Storm Session
-
-<div
-  class=""
-  v-click 
-  v-motion
-  :initial="{ y: 40, opacity: 0 }"
-  :enter="{ y: 0, opacity: 1 }"
-  :leave="{ y: -200, opacity: 0, transition: { duration: 300 } }"
->
-
-  <!-- Closure 與 Counter 的範例 -->
-
-```ts {monaco-run}{autorun:false}
-function makeCounter() {
-  let count = 0
-  return () => ++count
-}
-
-const counter = makeCounter()
-console.log(counter());
-console.log(counter());
-```
-
-```ts {monaco-run} {autorun:false}
-function makeGreeter(name: string) {
-  const greeting = "Hello"
-  return function () {
-    console.log(`${greeting}, ${name}!`)
-  }
-}
-
-const greetTakai = makeGreeter("Takai")
-greetTakai();
-```
-
-  <p v-click="2" class="text-emerald-400">
-    ✅ 函式在外層已經執行完畢，但變數還「活著」！
-  </p>
-</div>
-
 ---
 
 # Brain Storm Session
@@ -319,9 +288,9 @@ const apiKey = "123456"
         <td class="px-4 py-2 text-green-400">提升（Hoisting）</td>
         <td class="px-4 py-2">
         <pre class="p-0 m-0">
-          <code>var</code> 宣告的變數會自動初始化為 <code>undefined</code>，因此在宣告前就使用變數，<span v-mark.circle.orange="6">不會出現錯誤</span>， 
-          而是 <code>undefined</code>；但是 <code>let</code> 與 <code>const</code> 則不會自動初始化，進入暫時死區 (TDZ)， 
-          因此在宣告前使用<span v-mark.circle.orange="6">會出現錯誤</span>。
+<code>var</code> 宣告的變數會自動初始化為 <code>undefined</code>，因此在宣告前就使用變數，<span v-mark.circle.orange="6">不會出現錯誤</span>， 
+而是 <code>undefined</code>；但是 <code>let</code> 與 <code>const</code> 則不會自動初始化，進入暫時死區 (TDZ)， 
+因此在宣告前使用<span v-mark.circle.orange="6">會出現錯誤</span>。
         </pre>
         </td>
         </tr>
@@ -329,12 +298,62 @@ const apiKey = "123456"
         <td class="px-4 py-2 text-green-400">重新賦值</td>
         <td class="px-4 py-2">
           <code>let</code> 與 <code>const</code> 在絕多數面向都相似，兩者的一大區別在於， 
-          <span v-mark.circle.orange="7">用 <code>let</code> 宣告的變數可以重新賦值</span>，但用 <code>const</code> 的不行。
+          <span v-mark.circle.orange="7">用 <code>let</code> 宣告的變數可以更改其值 </span>，但用 <code>const</code> 的不行。
         </td>
         </tr>
         </tbody>
   </table>
 </div>
+
+
+---
+transition: fade
+---
+
+# Brain Storm Session
+
+<div
+  class=""
+  v-click 
+  v-motion
+  :initial="{ y: 40, opacity: 0 }"
+  :enter="{ y: 0, opacity: 1 }"
+  :leave="{ y: -200, opacity: 0, transition: { duration: 300 } }"
+>
+
+
+  <!-- Closure 與 Counter 的範例 -->
+
+```ts {monaco-run}{autorun:false}
+function makeCounter() {
+  let count = 0
+  return () => ++count
+}
+
+const counter = makeCounter()
+console.log(counter());
+console.log(counter());
+```
+
+```ts {monaco-run} {autorun:false}
+function makeGreeter(name: string) {
+  const greeting = "Hello"
+  return function () {
+    console.log(`${greeting}, ${name}!`)
+  }
+}
+
+const greetTakai = makeGreeter("Takai")
+greetTakai();
+```
+
+  <p v-click="2" class="text-emerald-400 absolute right-0 -top-14">
+    ✅ 函式在外層已經執行完畢，但變數還「活著」！
+  </p>
+
+</div>
+
+
 
 ---
 
@@ -365,8 +384,8 @@ Template string 讓你能夠在字串中直接嵌入變數，並且使字串拼�
 ```ts
 const name = "リン"
 const age = 25
-const greeting = `こにちは ${name} です。 ${age + 5} さいです。`
-console.log(greeting) // こにちは リン　です 30 さいです。
+const greeting = `こにちは ${name} です。 ${age + 5} さいでございます。`
+console.log(greeting) // こにちは リン。　です 30 さいでございます。
 ```
 
 ```ts
