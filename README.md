@@ -1,9 +1,9 @@
-# Welcome to [Slidev](https://github.com/slidevjs/slidev)!
+# Deployed at [Vercel](https://js-slide-beta.vercel.app/)!
 
 To start the slide show:
 
 - `pnpm install`
-- `pnpm dev`
+- `pnpm run dev`
 - visit <http://localhost:3030>
 
 Edit the [slides.md](./slides.md) to see the changes.

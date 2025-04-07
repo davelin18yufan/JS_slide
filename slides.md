@@ -34,7 +34,7 @@ fonts:
 
 # 🚀 Modern JavaScript
 
-JS 的演變以及核心理念
+JS 的演變以及 ES6 之後對於語法的革新
 
 <div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
   Press Space for next page <carbon:arrow-right />
