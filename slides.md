@@ -1112,7 +1112,8 @@ axios.get("/api/data")
 
 <div 
   v-click
-  v-motion   
+  v-motion 
+  class="z-10"  
   :initial="{ opacity: 0 }"
   :enter="{ opacity: 1, transition: {duration: 300}}"
 >
@@ -1129,6 +1130,40 @@ try {
 ```
 
 </div>
+
+---
+
+```ts
+// 設定 headers 和攔截器
+export const instance = axios.create({
+  baseURL: "/api",
+  timeout: 5000, // 設定超時時間
+  headers: { "Authorization": "Bearer YOUR_TOKEN" } // 自訂 headers
+});
+
+// 攔截器：請求前處理
+instance.interceptors.request.use(
+  config => {
+    ...
+  },
+  error => {
+    ...
+  }
+);
+
+// 攔截器：回應後處理
+instance.interceptors.response.use(
+  response => {
+    ...
+  },
+  error => {
+    ...
+  }
+);
+
+```
+
+
 
 ---
 layout: image
