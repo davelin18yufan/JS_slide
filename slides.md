@@ -320,8 +320,6 @@ transition: fade
   :enter="{ y: 0, opacity: 1 }"
   :leave="{ y: -200, opacity: 0, transition: { duration: 300 } }"
 >
-
-
   <!-- Closure 與 Counter 的範例 -->
 
 ```ts {monaco-run}{autorun:false}
@@ -999,6 +997,67 @@ lunchFlow();
 
 <p v-click="2" class="text-yellow-400">📖 更像同步邏輯，更好讀懂與維護</p>
 
+--- 
+transition: slide-up
+---
+
+# 🚀 常見 Promise API 用法
+
+````md magic-move {lines:true}
+
+```ts {*|5,23|2-5|*}
+// Promise.all()
+const [
+    { ErrorMessage: getHomeworkErrorMessage, ...homework },
+    { ItemList: attachments, ErrorMessage: getAttachmentsErrorMessage },
+] = await Promise.all([
+    $.ajax({
+        type: "GET",
+        url: `../api/My_Course_Homework_GetOne?chwNo=${chwNo}`,
+        async: true,
+        //...
+    }),
+    $.ajax({
+        method: "GET",
+        url: "../api/My_AttFile_Attachment_GetList",
+        data: {
+            mapDataNo: chwNo,
+            typeCode: atttypecodeHomework15,
+            searchKeyword: ""
+        },
+        async: true,
+        //...
+    })
+]);
+
+```
+
+```ts {*|1-2|22|*}
+// Promise.race()
+const result = await Promise.race([
+  $.ajax({
+    type: "GET",
+    url: `../api/My_Course_Homework_GetOne?chwNo=${chwNo}`,
+    async: true,
+    //...
+  }),
+  $.ajax({
+    method: "GET",
+    url: "../api/My_AttFile_Attachment_GetList",
+    data: {
+      mapDataNo: chwNo,
+      typeCode: atttypecodeHomework15,
+      searchKeyword: ""
+    },
+    async: true,
+    //...
+  })
+]);
+
+console.log("Success:", result); // 誰先 fullfill 就是谁
+
+```
+````
 
 ---
 transition: fade
