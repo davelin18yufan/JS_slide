@@ -639,6 +639,7 @@ NaN == NaN      // false ❌
 0 === ''        // false ✅
 false === []    // false ✅
 Object.is(NaN, NaN)  // true ✅
+Object.is(null, undefined) // false ✅
 ```
 
 ````
