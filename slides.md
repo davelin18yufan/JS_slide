@@ -1163,8 +1163,6 @@ instance.interceptors.response.use(
 
 ```
 
-
-
 ---
 layout: image
 class: place-content-center brightness-90
@@ -1202,7 +1200,7 @@ class: text-center
 
 # 謝謝聆聽
 
-> [Promise 是什麼？有什麼用途？](https://www.explainthis.io/zh-hant/swe/what-is-promise) · [【筆記】到底 Event Loop 關我啥事？](https://medium.com/infinitegamer/why-event-loop-exist-e8ac9d287044)
+> [Promise 是什麼？有什麼用途？](https://www.explainthis.io/zh-hant/swe/what-is-promise) · [【筆記】到底 Event Loop 關我啥事？](https://medium.com/infinitegamer/why-event-loop-exist-e8ac9d287044) · [什麼是閉包 (Closure)？](https://www.explainthis.io/zh-hant/swe/what-is-closure) ·[Typescript 的重構之路](https://www.threads.net/@leo.web.dev/post/DHGkqfPpCcP/%E7%95%B6%E6%89%80%E6%9C%89%E4%BA%BA%E9%83%BD%E5%9C%A8%E7%8C%9C%E7%82%BA%E4%BB%80%E9%BA%BC-typescript-%E4%B8%8D%E4%BD%BF%E7%94%A8-rust-%E6%88%96-c-%E9%87%8D%E6%A7%8B%E6%99%82%E6%89%8D%E7%99%BC%E7%8F%BE%E5%8E%9F%E4%BE%86-%E5%90%8C%E7%82%BA-typescript-%E8%B7%9F-c-%E7%9A%84%E4%BD%9C%E8%80%85%E5%B7%B2%E7%B6%93%E5%9C%A8%E9%80%99%E9%83%A8%E5%BD%B1%E7%89%87%E8%A1%A8%E7%A4%BA%E7%82%BA%E4%BB%80%E9%BA%BC%E8%A6%81%E4%BD%BF%E7%94%A8)
 
 [GitHub](https://github.com/davelin18yufan/JS_slide) · [Showcases](https://sli.dev/resources/showcases)
 
