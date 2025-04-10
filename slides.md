@@ -688,7 +688,7 @@ transition: fade
 ---
 
 # 🚦 同步 vs 非同步
-> Javascript 是個單線呈語言 (single thread), 必須 **由上到下** 依序執行
+> Javascript 是個單執行緒語言 (single thread), 必須 **由上到下** 依序執行
 
 
 ### 同步：一步一腳印
