@@ -185,32 +185,29 @@ v-motion
 <v-click>
 
 ````md magic-move {lines:true}
-```ts {*}
-// 用 var 宣告在 block 裡
-var count = 1
-if (true) {
-  var count = 2 // 但是因為 var 會被提升，往上尋找上一層的函示作用域直到全域
-  console.log(count) 
+```ts
+function test() {
+  var message = "外部";
+  if (true) {
+    var message = "內部";
+    console.log("區塊內：", message); // "內部"
+  }
+  console.log("區塊外：", message);   // 仍是 "內部"
 }
-console.log(count)
+test();
 ```
 
 ```ts {*}
-// 實際結果：變數提升
-var count = 1
-if (true) {
-  var count = 2 // 🆙
-  console.log(count) // 2
+function test() {
+  let message = "外部";
+  if (true) {
+    let message = "內部";
+    console.log("區塊內：", message); // "內部"
+  }
+  console.log("區塊外：", message);   // "外部"
 }
-console.log(count)
-```
+test();
 
-```ts {*}
-// const/let 一樣會提升，但因為是區塊作用域只會提升到 block 的頂端
-// BUT 因為他們不會在宣告前被初始化，此情形又被稱為「暫時死區」 (TDZ)
-
-console.log(greeting); // ❌ Uncaught ReferenceError: greeting is not defined
-let greeting = "hi there";
 ```
 
 ```ts {*}
@@ -254,9 +251,21 @@ console.log(apiKey)
 const apiKey = "123456"
 ```
 
+<div
+  v-click="3" 
+  v-motion
+  :initial="{ y: 40, opacity: 0 }"
+  :enter="{ y: 0, opacity: 1 }"
+>
+
+- `const`/`let` 一樣會提升，但因為是區塊作用域只會提升到 block 的頂端
+- BUT 因為他們不會在宣告前被初始化，此情形又被稱為「暫時死區」 (TDZ)
+
+</div>
+
 <div 
   class="absolute top-24 bg-slate-800 left-0 p-3"
-  v-click="3" 
+  v-click="4" 
   v-motion
   :initial="{ y: 40, opacity: 0 }"
   :enter="{ y: 0, opacity: 1 }"
