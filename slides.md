@@ -240,7 +240,7 @@ var msg = "hello"
 ```
 
 ```ts {2,3|1|*}{at:'1'}
-// let ➜ ❌ ReferenceError（TDZ 區塊死區）
+// let ➜ ❌ ReferenceError（TDZ 暫時死區）
 console.log(count)
 let count = 10
 ```
